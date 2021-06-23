@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>At Samart Map | Longdo Map</title>
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            margin: 0px;
+            height: 100%;
+        }
+
+        #btn-area {
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #map {
+            height: 50%;
+        }
+
+        .icon-map {
+            width: 24px;
+            margin-right: 4px;
+        }
+
+        .pure-material-button-contained {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 0px 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 4px;
+            padding: 0 16px;
+            min-width: 90px;
+            height: 46px;
+            vertical-align: middle;
+            text-align: center;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+            font-family: var(--pure-material-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 36px;
+            overflow: hidden;
+            outline: none;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .pure-material-button-contained::-moz-focus-inner {
+            border: none;
+        }
+
+        /* Overlay */
+        .pure-material-button-contained::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* Ripple */
+        .pure-material-button-contained::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            padding: 50%;
+            width: 32px;
+            /* Safari */
+            height: 32px;
+            /* Safari */
+            background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1);
+            transition: opacity 1s, transform 0.5s;
+        }
+
+        /* Hover, Focus */
+        .pure-material-button-contained:hover,
+        .pure-material-button-contained:focus {
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        .pure-material-button-contained:hover::before {
+            opacity: 0.08;
+        }
+
+        .pure-material-button-contained:focus::before {
+            opacity: 0.24;
+        }
+
+        .pure-material-button-contained:hover:focus::before {
+            opacity: 0.3;
+        }
+
+        /* Active */
+        .pure-material-button-contained:active {
+            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        }
+
+        .pure-material-button-contained:active::after {
+            opacity: 0.32;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0s;
+        }
+
+        /* Disabled */
+        .pure-material-button-contained:disabled {
+            color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
+            background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.12);
+            box-shadow: none;
+            cursor: initial;
+        }
+
+        .pure-material-button-contained:disabled::before {
+            opacity: 0;
+        }
+
+        .pure-material-button-contained:disabled::after {
+            opacity: 0;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #btn-area {
+                height: unset;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            .pure-material-button-contained {
+                width: 100%;
+                margin: 10px 10px;
+            }
+        }
+    </style>
+    <script type="text/javascript" src="https://api.longdo.com/map/?key=3f33f729faa75c7d94d4b2c06b58cf82"></script>
+    <script>
+        var map;
+        var trashLine1 = [
+            { lon: 103.86586859822273, lat: 15.85047958322983 },
+            { lon: 103.87409761548042, lat: 15.846629850299205 },
+            { lon: 103.87475207448006, lat: 15.847899341391091 },
+            { lon: 103.87593224644661, lat: 15.847300720570239 }
+        ]
+        var trashLine2 = [
+            { lon: 103.87725993990898, lat: 15.833882891603661 },
+            { lon: 103.87893363833427, lat: 15.838919842690451 },
+            { lon: 103.87979194521904, lat: 15.83846569651512 },
+            { lon: 103.88193771243095, lat: 15.837309683460708 },
+            { lon: 103.88228103518486, lat: 15.838672126721427 },
+            { lon: 103.88125106692314, lat: 15.839167558355632 },
+            { lon: 103.88198062777519, lat: 15.841479556577836 }
+        ]
+        var trashCar1 = { lon: 103.87593224644661, lat: 15.847300720570239 }
+        var trashCar2 = { lon: 103.88198062777519, lat: 15.841479556577836 }
+
+        function init() {
+            map = new longdo.Map({
+                placeholder: document.getElementById('map')
+            });
+            map.location({ lon: 103.879406, lat: 15.842099 })
+            map.zoom(15);
+            seletedTypeMap('trash')
+        }
+
+        function seletedTypeMap(params) {
+            map.Overlays.clear();
+            if (params === 'trash') {
+                map.Overlays.add(new longdo.Polyline(trashLine1, { lineColor: 'rgba(76, 175, 80, 1)' }));
+                map.Overlays.add(new longdo.Polyline(trashLine2, { lineColor: 'rgba(76, 175, 80, 1)' }));
+                map.Overlays.add(new longdo.Marker(trashCar1, {
+                    icon: {
+                        html: '<img class="icon-map" src="./source/Group 116.svg" alt="">',
+                        offset: { x: 12, y: 12 }
+                    },
+                }));
+                map.Overlays.add(new longdo.Marker(trashCar2, {
+                    icon: {
+                        html: '<img class="icon-map" src="./source/Group 116.svg" alt="">',
+                        offset: { x: 12, y: 12 }
+                    },
+                }));
+            } else if (params === 'cctv') {
+                trashLine2.forEach(element => {
+                    map.Overlays.add(new longdo.Marker(element, {
+                        icon: {
+                            html: '<img class="icon-map" src="./source/Group 133.svg" alt="">',
+                            offset: { x: 12, y: 12 }
+                        },
+                        title: 'CCTV',
+                        detail: '<img class="icon-map" src="./source/Group 133.svg" alt="">'
+                    }));
+                });
+            } else if (params === 'water') {
+                loadJSON('data/pvc-100-mm.geojson',
+                    function (data) {
+                        data.features.forEach(element => {
+                            tempPolyline = []
+                            element.geometry.coordinates.forEach(x => {
+                                tempPolyline.push({ lat: x[1], lon: x[0] })
+                            });
+                            map.Overlays.add(new longdo.Polyline(tempPolyline, { lineWidth: 2, lineColor: 'rgba(76, 80, 175, 1)' }));
+                        });
+
+                    },
+                    function (xhr) { console.error(xhr); }
+                );
+            } else if (params === 'light') {
+                loadJSON('data/pressure-gate.geojson',
+                    function (data) {
+                        data.features.forEach(element => {
+                            map.Overlays.add(new longdo.Marker({ lat: element.geometry.coordinates[1], lon: element.geometry.coordinates[0] }, {
+                                icon: {
+                                    html: '<img class="icon-map" src="./source/Group 1673.svg" alt="">',
+                                    offset: { x: 12, y: 12 }
+                                },
+                            }));
+                        })
+                    },
+                    function (xhr) { console.error(xhr); }
+                );
+            } else if (params === 'procurement') {
+
+            }
+        }
+
+        function loadJSON(path, success, error) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        if (success)
+                            success(JSON.parse(xhr.responseText));
+                    } else {
+                        if (error)
+                            error(xhr);
+                    }
+                }
+            };
+            xhr.open("GET", path, true);
+            xhr.send();
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div id="btn-area">
+        <button onclick="seletedTypeMap('trash')" class="pure-material-button-contained">
+            <img class="icon-map" src="./source/Group 116.svg" alt="">การเก็บขยะ</button>
+        <button onclick="seletedTypeMap('cctv')" class="pure-material-button-contained"><img class="icon-map"
+                src="./source/Group 133.svg" alt="">CCTV</button>
+        <button onclick="seletedTypeMap('water')" class="pure-material-button-contained"><img class="icon-map"
+                src="./source/drops.svg" alt="">น้ำประปา</button>
+        <button onclick="seletedTypeMap('light')" class="pure-material-button-contained"><img class="icon-map"
+                src="./source/Group 1673.svg" alt="">แสงสว่าง</button>
+        <button onclick="seletedTypeMap('procurement')" class="pure-material-button-contained"><img class="icon-map"
+                src="./source/Group 1674.svg" alt="">ประกาศสอบราคา/ประกวดราคา</button>
+    </div>
+    <div id="map"></div>
+</body>
+
+</html>
