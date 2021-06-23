@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Create Map Sample | Longdo Map</title>
+  <style type="text/css">
+    html {
+      height: 100%;
+    }
+
+    body {
+      margin: 0px;
+      height: 100%;
+    }
+
+    #map {
+      height: 100%;
+    }
+  </style>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+  <script>
+    var map
+    function init(params) {
+      mapboxgl.accessToken = 'pk.eyJ1Ijoibml0aWtvcm4iLCJhIjoiY2p6ZHR0Yjk0MDNxNDNncGhqbDk5M3ZpaCJ9.FW231UaLDWmlgt3d7HQ1yg';
+      map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/satellite-v9',
+        center: [103.879406, 15.842099],
+        zoom: 16
+      });
+      map.on('load', function () {
+        map.addSource('infra', {
+          type: 'geojson',
+          // Use a URL for the value for the `data` property.
+          data: './infra.geojson'
+        });
+        map.addLayer({
+          'id': 'infra-layer',
+          'type': 'line',
+          'source': 'infra',
+          'paint': {
+            'line-width': 2,
+            'line-color': 'red',
+          }
+        });
+      })
+    }
+  </script>
+</head>
+
+<body onload="init();">
+  <div id="map"></div>
+</body>
+
+</html>
