@@ -147,83 +147,69 @@
                 margin-left: 10px;
                 margin-right: 10px;
             }
-
             .pure-material-button-contained {
                 width: 100%;
                 margin: 10px 10px;
             }
         }
     </style>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>
+    <script type="text/javascript" src="https://api.longdo.com/map/?key=3f33f729faa75c7d94d4b2c06b58cf82"></script>
     <script>
         var map;
         var trashLine1 = [
-            [15.85047958322983, 103.86586859822273],
-            [15.84662985029920, 103.87409761548042],
-            [15.84789934139109, 103.87475207448006],
-            [15.84730072057023, 103.87593224644661]
+            { lon: 103.86586859822273, lat: 15.85047958322983 },
+            { lon: 103.87409761548042, lat: 15.846629850299205 },
+            { lon: 103.87475207448006, lat: 15.847899341391091 },
+            { lon: 103.87593224644661, lat: 15.847300720570239 }
         ]
-
         var trashLine2 = [
-            [15.83388289160366, 103.87725993990898],
-            [15.83891984269045, 103.87893363833427],
-            [15.83846569651512, 103.87979194521904],
-            [15.83730968346070, 103.88193771243095],
-            [15.83867212672142, 103.88228103518486],
-            [15.83916755835563, 103.88125106692314],
-            [15.84147955657783, 103.88198062777519]
+            { lon: 103.87725993990898, lat: 15.833882891603661 },
+            { lon: 103.87893363833427, lat: 15.838919842690451 },
+            { lon: 103.87979194521904, lat: 15.83846569651512 },
+            { lon: 103.88193771243095, lat: 15.837309683460708 },
+            { lon: 103.88228103518486, lat: 15.838672126721427 },
+            { lon: 103.88125106692314, lat: 15.839167558355632 },
+            { lon: 103.88198062777519, lat: 15.841479556577836 }
         ]
-        var trashLineObj1 = L.polyline(trashLine1, { color: 'green' });
-        var trashLineObj2 = L.polyline(trashLine2, { color: 'green' });
-        var trashCar1 = [15.847300720570239, 103.87593224644661]
-        var trashCar2 = [15.841479556577836, 103.88198062777519]
-        var tempLayer = L.layerGroup();
-        var trashIcon = L.icon({
-            iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-red.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76],
-            shadowUrl: 'my-icon-shadow.png',
-            shadowSize: [68, 95],
-            shadowAnchor: [22, 94]
-        });
-        var cctvIcon = L.icon({
-            iconUrl: 'my-icon.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76],
-            shadowUrl: 'my-icon-shadow.png',
-            shadowSize: [68, 95],
-            shadowAnchor: [22, 94]
-        });
+        var trashCar1 = { lon: 103.87593224644661, lat: 15.847300720570239 }
+        var trashCar2 = { lon: 103.88198062777519, lat: 15.841479556577836 }
 
         function init() {
-            map = L.map('map').setView([15.842099, 103.879406], 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-            map.addLayer(tempLayer);
+            map = new longdo.Map({
+                placeholder: document.getElementById('map')
+            });
+            map.location({ lon: 103.879406, lat: 15.842099 })
+            map.zoom(15);
+            seletedTypeMap('trash')
         }
 
         function seletedTypeMap(params) {
-            tempLayer.clearLayers();
-
+            map.Overlays.clear();
             if (params === 'trash') {
-                tempLayer.addLayer(L.marker(trashCar1), { icon: trashIcon });
-                tempLayer.addLayer(L.marker(trashCar2), { icon: trashIcon });
-                tempLayer.addLayer(trashLineObj1)
-                tempLayer.addLayer(trashLineObj2)
+                map.Overlays.add(new longdo.Polyline(trashLine1, { lineColor: 'rgba(76, 175, 80, 1)' }));
+                map.Overlays.add(new longdo.Polyline(trashLine2, { lineColor: 'rgba(76, 175, 80, 1)' }));
+                map.Overlays.add(new longdo.Marker(trashCar1, {
+                    icon: {
+                        html: '<img class="icon-map" src="./source/Group 116.svg" alt="">',
+                        offset: { x: 12, y: 12 }
+                    },
+                }));
+                map.Overlays.add(new longdo.Marker(trashCar2, {
+                    icon: {
+                        html: '<img class="icon-map" src="./source/Group 116.svg" alt="">',
+                        offset: { x: 12, y: 12 }
+                    },
+                }));
             } else if (params === 'cctv') {
-                trashLine1.forEach(element => {
-                    tempLayer.addLayer(L.marker(element), { icon: cctvIcon });
-                });
                 trashLine2.forEach(element => {
-                    tempLayer.addLayer(L.marker(element), { icon: cctvIcon });
+                    map.Overlays.add(new longdo.Marker(element, {
+                        icon: {
+                            html: '<img class="icon-map" src="./source/Group 133.svg" alt="">',
+                            offset: { x: 12, y: 12 }
+                        },
+                        title: 'CCTV',
+                        detail: '<img class="icon-map" src="./source/Group 133.svg" alt="">'
+                    }));
                 });
             } else if (params === 'water') {
                 loadJSON('data/pvc-100-mm.geojson',
@@ -231,9 +217,9 @@
                         data.features.forEach(element => {
                             tempPolyline = []
                             element.geometry.coordinates.forEach(x => {
-                                tempPolyline.push([x[1], x[0]])
+                                tempPolyline.push({ lat: x[1], lon: x[0] })
                             });
-                            tempLayer.addLayer(L.polyline(tempPolyline, { color: 'green' }))
+                            map.Overlays.add(new longdo.Polyline(tempPolyline, { lineWidth: 2, lineColor: 'rgba(76, 80, 175, 1)' }));
                         });
 
                     },
@@ -243,7 +229,12 @@
                 loadJSON('data/pressure-gate.geojson',
                     function (data) {
                         data.features.forEach(element => {
-                            tempLayer.addLayer(L.marker([element.geometry.coordinates[1], element.geometry.coordinates[0]]), { icon: trashIcon });
+                            map.Overlays.add(new longdo.Marker({ lat: element.geometry.coordinates[1], lon: element.geometry.coordinates[0] }, {
+                                icon: {
+                                    html: '<img class="icon-map" src="./source/Group 1673.svg" alt="">',
+                                    offset: { x: 12, y: 12 }
+                                },
+                            }));
                         })
                     },
                     function (xhr) { console.error(xhr); }
