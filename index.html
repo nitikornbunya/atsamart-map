@@ -201,6 +201,11 @@
             shadowSize: [68, 95],
             shadowAnchor: [22, 94]
         });
+        var myLines = [{
+            "type": "LineString",
+            "coordinates": [[103.869308128831193, 15.82509479191765, 0.0], [103.891303597413199, 15.83217892262128, 0.0], [103.894293981228302, 15.84988991516833, 0.0], [103.874782388630507, 15.862436971236949, 0.0], [103.860587044447001, 15.8471976429454, 0.0], [103.869308128831193, 15.82509479191765, 0.0]]
+        }];
+        var myLayer;
 
         function init() {
             map = L.map('map').setView([15.842099, 103.879406], 15);
@@ -208,6 +213,8 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             map.addLayer(tempLayer);
+
+            L.geoJSON(myLines).addTo(map);
         }
 
         function seletedTypeMap(params) {
