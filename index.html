@@ -217,6 +217,10 @@
             L.geoJSON(myLines).addTo(map);
         }
 
+        function gotoLocation() {
+            map.panTo(new L.LatLng(15.842099, 103.879406));
+        }
+
         function seletedTypeMap(params) {
             tempLayer.clearLayers();
 
