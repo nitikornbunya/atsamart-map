@@ -2,7 +2,7 @@
 "type": "FeatureCollection",
 "name": "cctv-location",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [ 
+"features": [
 { "type": "Feature", "properties": { "Name": "เฟส1_1_1ตัว", "description": null, "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 103.877477471110794, 15.84575144399491, 140.651734024874912 ] } },
 { "type": "Feature", "properties": { "Name": "เฟส1_2_1ตัว", "description": null, "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 103.877110130411594, 15.84530951553155, 140.722123719106008 ] } },
 { "type": "Feature", "properties": { "Name": "เฟส1_3_1ตัว", "description": null, "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 103.877095277778807, 15.845305901931949, 140.685388840547006 ] } },
