@@ -1,0 +1,20 @@
+<html>
+<style type="text/css">
+    #cctv1_1 {
+        width: 280px;
+        height: 180px;
+    }
+</style>
+
+<body>
+    <canvas id="cctv1_1"></canvas>
+</body>
+
+<script type="text/javascript" src="jsmpeg.min.js"></script>
+<script type="text/javascript">
+    player = new JSMpeg.Player('ws://13.251.249.208:3333', {
+        canvas: document.getElementById('cctv1_1') // Canvas should be a canvas DOM element
+    })
+</script>
+
+</html>

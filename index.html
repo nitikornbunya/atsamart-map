@@ -1,302 +1,442 @@
-<!DOCTYPE HTML>
-<html>
+<style type="text/css">
+    html {
+        height: 100%;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>At Samart Map | Longdo Map</title>
-    <style type="text/css">
-        html {
-            height: 100%;
+    body {
+        margin: 0px;
+        height: 100%;
+    }
+
+    #btn-area {
+        height: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #iframe {
+        width: 300px;
+        height: 220px;
+    }
+
+    .legend {
+        line-height: 18px;
+        color: #555;
+    }
+
+    .legend i {
+        width: 14px;
+        height: 14px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+    }
+
+    .infomap {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        display: none;
+    }
+
+    .infomap h4 {
+        margin: 0 0 5px;
+        color: #777;
+    }
+
+    #map {
+        width: 100%;
+        height: 500px;
+    }
+
+    /*-- Mobile Version --*/
+    @media (max-width: 768px) {
+        #map {
+            aspect-ratio: unset;
+            height: 400px;
         }
+    }
 
-        body {
-            margin: 0px;
-            height: 100%;
-        }
+    .icon-map {
+        width: 24px;
+        margin-right: 4px;
+    }
 
+    .pure-material-button-contained {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin: 0px 10px;
+        box-sizing: border-box;
+        border: none;
+        border-radius: 4px;
+        padding: 0 16px;
+        min-width: 90px;
+        height: 46px;
+        vertical-align: middle;
+        text-align: center;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        font-family: var(--pmr-font);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 36px;
+        overflow: hidden;
+        outline: none;
+        cursor: pointer;
+        transition: box-shadow 0.2s;
+    }
+
+    .pure-material-button-contained::-moz-focus-inner {
+        border: none;
+    }
+
+    /* Overlay */
+    .pure-material-button-contained::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    /* Ripple */
+    .pure-material-button-contained::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        padding: 50%;
+        width: 32px;
+        /* Safari */
+        height: 32px;
+        /* Safari */
+        background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+        transition: opacity 1s, transform 0.5s;
+    }
+
+    /* Hover, Focus */
+    .pure-material-button-contained:hover,
+    .pure-material-button-contained:focus {
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .pure-material-button-contained:hover::before {
+        opacity: 0.08;
+    }
+
+    .pure-material-button-contained:focus::before {
+        opacity: 0.24;
+    }
+
+    .pure-material-button-contained:hover:focus::before {
+        opacity: 0.3;
+    }
+
+    /* Active */
+    .pure-material-button-contained:active {
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
+
+    .pure-material-button-contained:active::after {
+        opacity: 0.32;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0s;
+    }
+
+    /* Disabled */
+    .pure-material-button-contained:disabled {
+        color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
+        background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.12);
+        box-shadow: none;
+        cursor: initial;
+        opacity: .5;
+    }
+
+    .pure-material-button-contained:disabled::before {
+        opacity: 0;
+    }
+
+    .pure-material-button-contained:disabled::after {
+        opacity: 0;
+    }
+
+    @media only screen and (max-width: 600px) {
         #btn-area {
-            height: 20%;
+            height: unset;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-        }
-
-        #map {
-            height: 50%;
-        }
-
-        .icon-map {
-            width: 24px;
-            margin-right: 4px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
 
         .pure-material-button-contained {
-            position: relative;
-            display: flex;
-            align-items: center;
-            margin: 0px 10px;
-            box-sizing: border-box;
-            border: none;
-            border-radius: 4px;
-            padding: 0 16px;
-            min-width: 90px;
-            height: 46px;
-            vertical-align: middle;
-            text-align: center;
-            text-overflow: ellipsis;
-            text-transform: uppercase;
-            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-            font-family: var(--pure-material-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 36px;
-            overflow: hidden;
-            outline: none;
-            cursor: pointer;
-            transition: box-shadow 0.2s;
+            width: 100%;
+            margin: 10px 10px;
         }
-
-        .pure-material-button-contained::-moz-focus-inner {
-            border: none;
-        }
-
-        /* Overlay */
-        .pure-material-button-contained::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        /* Ripple */
-        .pure-material-button-contained::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            border-radius: 50%;
-            padding: 50%;
-            width: 32px;
-            /* Safari */
-            height: 32px;
-            /* Safari */
-            background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(1);
-            transition: opacity 1s, transform 0.5s;
-        }
-
-        /* Hover, Focus */
-        .pure-material-button-contained:hover,
-        .pure-material-button-contained:focus {
-            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
-        }
-
-        .pure-material-button-contained:hover::before {
-            opacity: 0.08;
-        }
-
-        .pure-material-button-contained:focus::before {
-            opacity: 0.24;
-        }
-
-        .pure-material-button-contained:hover:focus::before {
-            opacity: 0.3;
-        }
-
-        /* Active */
-        .pure-material-button-contained:active {
-            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
-        }
-
-        .pure-material-button-contained:active::after {
-            opacity: 0.32;
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0s;
-        }
-
-        /* Disabled */
-        .pure-material-button-contained:disabled {
-            color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
-            background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.12);
-            box-shadow: none;
-            cursor: initial;
-        }
-
-        .pure-material-button-contained:disabled::before {
-            opacity: 0;
-        }
-
-        .pure-material-button-contained:disabled::after {
-            opacity: 0;
-        }
-
-        @media only screen and (max-width: 600px) {
-            #btn-area {
-                height: unset;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                margin-left: 10px;
-                margin-right: 10px;
-            }
-
-            .pure-material-button-contained {
-                width: 100%;
-                margin: 10px 10px;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>
-    <script>
-        var map;
-        var trashLine1 = [
-            [15.85047958322983, 103.86586859822273],
-            [15.84662985029920, 103.87409761548042],
-            [15.84789934139109, 103.87475207448006],
-            [15.84730072057023, 103.87593224644661]
-        ]
-
-        var trashLine2 = [
-            [15.83388289160366, 103.87725993990898],
-            [15.83891984269045, 103.87893363833427],
-            [15.83846569651512, 103.87979194521904],
-            [15.83730968346070, 103.88193771243095],
-            [15.83867212672142, 103.88228103518486],
-            [15.83916755835563, 103.88125106692314],
-            [15.84147955657783, 103.88198062777519]
-        ]
-        var trashLineObj1 = L.polyline(trashLine1, { color: 'green' });
-        var trashLineObj2 = L.polyline(trashLine2, { color: 'green' });
-        var trashCar1 = [15.847300720570239, 103.87593224644661]
-        var trashCar2 = [15.841479556577836, 103.88198062777519]
-        var tempLayer = L.layerGroup();
-        var trashIcon = L.icon({
-            iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-red.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76],
-            shadowUrl: 'my-icon-shadow.png',
-            shadowSize: [68, 95],
-            shadowAnchor: [22, 94]
-        });
-        var cctvIcon = L.icon({
-            iconUrl: 'my-icon.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76],
-            shadowUrl: 'my-icon-shadow.png',
-            shadowSize: [68, 95],
-            shadowAnchor: [22, 94]
-        });
-        var myLines = [{
-            "type": "LineString",
-            "coordinates": [[103.869308128831193, 15.82509479191765, 0.0], [103.891303597413199, 15.83217892262128, 0.0], [103.894293981228302, 15.84988991516833, 0.0], [103.874782388630507, 15.862436971236949, 0.0], [103.860587044447001, 15.8471976429454, 0.0], [103.869308128831193, 15.82509479191765, 0.0]]
-        }];
-        var myLayer;
-
-        function init() {
-            map = L.map('map').setView([15.842099, 103.879406], 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-            map.addLayer(tempLayer);
-
-            L.geoJSON(myLines).addTo(map);
-        }
-
-        function gotoLocation() {
-            map.panTo(new L.LatLng(15.842099, 103.879406));
-        }
-
-        function seletedTypeMap(params) {
-            tempLayer.clearLayers();
-
-            if (params === 'trash') {
-                tempLayer.addLayer(L.marker(trashCar1), { icon: trashIcon });
-                tempLayer.addLayer(L.marker(trashCar2), { icon: trashIcon });
-                tempLayer.addLayer(trashLineObj1)
-                tempLayer.addLayer(trashLineObj2)
-            } else if (params === 'cctv') {
-                trashLine1.forEach(element => {
-                    tempLayer.addLayer(L.marker(element), { icon: cctvIcon });
-                });
-                trashLine2.forEach(element => {
-                    tempLayer.addLayer(L.marker(element), { icon: cctvIcon });
-                });
-            } else if (params === 'water') {
-                loadJSON('data/pvc-100-mm.geojson',
-                    function (data) {
-                        data.features.forEach(element => {
-                            tempPolyline = []
-                            element.geometry.coordinates.forEach(x => {
-                                tempPolyline.push([x[1], x[0]])
-                            });
-                            tempLayer.addLayer(L.polyline(tempPolyline, { color: 'green' }))
-                        });
-
-                    },
-                    function (xhr) { console.error(xhr); }
-                );
-            } else if (params === 'light') {
-                loadJSON('data/pressure-gate.geojson',
-                    function (data) {
-                        data.features.forEach(element => {
-                            tempLayer.addLayer(L.marker([element.geometry.coordinates[1], element.geometry.coordinates[0]]), { icon: trashIcon });
-                        })
-                    },
-                    function (xhr) { console.error(xhr); }
-                );
-            } else if (params === 'procurement') {
-
-            }
-        }
-
-        function loadJSON(path, success, error) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        if (success)
-                            success(JSON.parse(xhr.responseText));
-                    } else {
-                        if (error)
-                            error(xhr);
-                    }
-                }
-            };
-            xhr.open("GET", path, true);
-            xhr.send();
-        }
+    }
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin="">
     </script>
-</head>
+<script type="text/javascript" src="jsmpeg.min.js"></script>
+<script>
+    var map;
+    var tempLayer = L.layerGroup();
+    var trashIcon = L.icon({
+        iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
+        iconSize: [38, 95],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76],
+        shadowUrl: 'my-icon-shadow.png',
+        shadowSize: [68, 95],
+        shadowAnchor: [22, 94]
+    }
+    );
+    var cctvIcon = L.icon({
+        iconUrl: 'my-icon.png',
+        iconSize: [38, 95],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76],
+        shadowUrl: 'my-icon-shadow.png',
+        shadowSize: [68, 95],
+        shadowAnchor: [22, 94]
+    }
+    );
+    var LeafIcon = L.Icon.extend({
+        options: {
+            iconSize: [38, 40],
+            iconAnchor: [22, 39],
+            popupAnchor: [-3, -40]
+        }
+    });
 
-<body onload="init();">
-    <div id="btn-area">
-        <button onclick="seletedTypeMap('trash')" class="pure-material-button-contained">
-            <img class="icon-map" src="./source/Group 116.svg" alt="">การเก็บขยะ</button>
-        <button onclick="seletedTypeMap('cctv')" class="pure-material-button-contained"><img class="icon-map"
-                src="./source/Group 133.svg" alt="">CCTV</button>
-        <button onclick="seletedTypeMap('water')" class="pure-material-button-contained"><img class="icon-map"
-                src="./source/drops.svg" alt="">น้ำประปา</button>
-        <button onclick="seletedTypeMap('light')" class="pure-material-button-contained"><img class="icon-map"
-                src="./source/Group 1673.svg" alt="">แสงสว่าง</button>
-        <button onclick="seletedTypeMap('procurement')" class="pure-material-button-contained"><img class="icon-map"
-                src="./source/Group 1674.svg" alt="">ประกาศสอบราคา/ประกวดราคา</button>
+    var greenIcon = new LeafIcon({ iconUrl: 'https://atsamart-map.vercel.app/source/Group 133.svg' })
+
+    var myLines = [{
+        "type": "LineString",
+        "coordinates": [[103.869308128831193, 15.82509479191765, 0.0], [103.891303597413199, 15.83217892262128, 0.0], [103.894293981228302, 15.84988991516833, 0.0], [103.874782388630507, 15.862436971236949, 0.0], [103.860587044447001, 15.8471976429454, 0.0], [103.869308128831193, 15.82509479191765, 0.0]]
+    }
+    ];
+    var myLayer;
+    var legend = L.control({ position: 'bottomright' });
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'infomap legend'),
+            grades = ['ท่อประปา 2 นิ้ว', 'ท่อประปา 4 นิ้ว', 'ท่อประปา 6 นิ้ว'],
+            labels = [];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i]) + '"></i> ' +
+                grades[i] + '<br>';
+        }
+
+        return div;
+    };
+
+    var longdomapserver = 'http://ms.longdo.com/mmmap/tile.php?zoom={z}&x={x}&y={y}&key=[YOUR-KEY-API]&proj=epsg3857&HD=1';
+
+
+    function init() {
+        map = L.map('map').setView([15.842099, 103.879406], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }
+        ).addTo(map);
+        map.addLayer(tempLayer);
+        L.geoJSON(myLines).addTo(map);
+        legend.addTo(map);
+        L.tileLayer(longdomapserver, {
+            attribution: '© Longdo Map'
+        }).addTo(map);
+    }
+    function seletedTypeMap(params) {
+        tempLayer.clearLayers();
+        if (params === 'trash') {
+            tempLayer.addLayer(L.marker('ex'), {
+                icon: greenIcon
+            }
+            );
+            // tempLayer.addLayer(trashLineObj1)
+        }
+        else if (params === 'cctv') {
+            document.getElementsByClassName('infomap')[0].style.display = "none";
+            loadJSON('https://atsamart-map.vercel.app/data/cctv-location.geojson',
+                function (data) {
+                    data.features.forEach(element => {
+                        // var canvas = element.properties.Name + '<canvas id="cctv1_1"></canvas>'
+                        // var div = '<div id="' + element.properties.Name + '" style="width: 200px; height:200px;"><svg/></div>';
+                        tempLayer.addLayer(L.marker([element.geometry.coordinates[1], element.geometry.coordinates[0]], {
+                            icon: greenIcon
+                        }).bindPopup('<iframe id="iframe" src="./cctv1_1.html"></iframe>')
+                        );
+                    }
+                    );
+                }
+                ,
+                function (xhr) {
+                    console.error(xhr);
+                }
+            );
+            // player = new JSMpeg.Player('ws://localhost:3333', {
+            //     canvas: document.getElementById('cctv1_1') // Canvas should be a canvas DOM element
+            // })
+        }
+        else if (params === 'water') {
+            document.getElementsByClassName('infomap')[0].style.display = "block";
+            loadJSON('https://atsamart-map.vercel.app/data/2-inches.geojson',
+                function (data) {
+                    data.features.forEach(element => {
+                        tempPolyline = []
+                        element.geometry.coordinates.forEach(x => {
+                            tempPolyline.push([x[1], x[0]])
+                        }
+                        );
+                        tempLayer.addLayer(L.polyline(tempPolyline, {
+                            color: getColor('ท่อประปา 2 นิ้ว')
+                        }
+                        ))
+                    }
+                    );
+                }
+                ,
+                function (xhr) {
+                    console.error(xhr);
+                }
+            );
+            loadJSON('https://atsamart-map.vercel.app/data/4-inches.geojson',
+                function (data) {
+                    data.features.forEach(element => {
+                        temp4inches = []
+                        element.geometry.coordinates.forEach(x => {
+                            temp4inches.push([x[1], x[0]])
+                        }
+                        );
+                        tempLayer.addLayer(L.polyline(temp4inches, {
+                            color: getColor('ท่อประปา 4 นิ้ว')
+                        }
+                        ))
+                    }
+                    );
+                }
+                ,
+                function (xhr) {
+                    console.error(xhr);
+                }
+            );
+            loadJSON('https://atsamart-map.vercel.app/data/6-inches.geojson',
+                function (data) {
+                    data.features.forEach(element => {
+                        temp4inches = []
+                        element.geometry.coordinates.forEach(x => {
+                            temp4inches.push([x[1], x[0]])
+                        }
+                        );
+                        tempLayer.addLayer(L.polyline(temp4inches, {
+                            color: getColor('ท่อประปา 6 นิ้ว')
+                        }
+                        ))
+                    }
+                    );
+                }
+                ,
+                function (xhr) {
+                    console.error(xhr);
+                }
+            );
+        }
+        else if (params === 'light') {
+            loadJSON('https://atsamart-map.vercel.app/data/pressure-gate.geojson',
+                function (data) {
+                    data.features.forEach(element => {
+                        tempLayer.addLayer(L.marker([element.geometry.coordinates[1], element.geometry.coordinates[0]]), {
+                            icon: trashIcon
+                        }
+                        );
+                    }
+                    )
+                }
+                ,
+                function (xhr) {
+                    console.error(xhr);
+                }
+            );
+        }
+        else if (params === 'procurement') {
+        }
+    }
+    function loadJSON(path, success, error) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    if (success)
+                        success(JSON.parse(xhr.responseText));
+                }
+                else {
+                    if (error)
+                        error(xhr);
+                }
+            }
+        };
+        xhr.open("GET", path, true);
+        xhr.send();
+    }
+    function getColor(d) {
+        return d === 'ท่อประปา 2 นิ้ว' ? '#2C2891' :
+            d === 'ท่อประปา 4 นิ้ว' ? '#39A388' :
+                '#1C7947';
+    }
+</script>
+<div id="btn-area">
+    <button onclick="seletedTypeMap('trash')" class="pure-material-button-contained" disabled>
+        <img class="icon-map" src="https://atsamart-map.vercel.app/source/Group 116.svg" alt="">การเก็บขยะ
+    </button>
+    <button onclick="seletedTypeMap('cctv')" class="pure-material-button-contained">
+        <img class="icon-map" src="https://atsamart-map.vercel.app/source/Group 133.svg" alt="">CCTV
+    </button>
+    <button onclick="seletedTypeMap('water')" class="pure-material-button-contained">
+        <img class="icon-map" src="https://atsamart-map.vercel.app/source/drops.svg" alt="">น้ำประปา
+    </button>
+    <button onclick="seletedTypeMap('light')" class="pure-material-button-contained" disabled>
+        <img class="icon-map" src="https://atsamart-map.vercel.app/source/Group 1673.svg" alt="">แสงสว่าง
+    </button>
+    <button onclick="seletedTypeMap('procurement')" class="pure-material-button-contained" disabled>
+        <img class="icon-map" src="https://atsamart-map.vercel.app/source/Group 1674.svg"
+            alt="">ประกาศสอบราคา/ประกวดราคา
+    </button>
+</div>
+<br>
+<div class="padding round shadow bg-white">
+    <div id="map">
     </div>
-    <div id="map"></div>
-</body>
-
-</html>
+</div>
+<script type="text/javascript">
+    init()
+</script>
+<!-- <script type="text/javascript">
+    player = new JSMpeg.Player('ws://localhost:3333', {
+        canvas: document.getElementById('cctv1_1') // Canvas should be a canvas DOM element
+    })
+</script> -->
